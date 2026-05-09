@@ -1,7 +1,8 @@
 # DB設計書
 
-**バージョン:** 1.0
+**バージョン:** 1.1
 **作成日:** 2026-05-09
+**更新日:** 2026-05-10
 **関連ドキュメント:** [要件定義書.md](要件定義書.md)
 
 ---
@@ -29,8 +30,9 @@ erDiagram
         INT id PK "プライマリキー（自動採番）"
         VARCHAR title "レシピ名"
         TEXT description "説明文（任意）"
-        TEXT ingredients "材料（改行区切り）"
-        TEXT instructions "作り方（改行区切り）"
+        TEXT point "ポイント・コツ（任意）"
+        TEXT ingredients "材料（改行区切り・名前 分量形式）"
+        TEXT instructions "作り方（改行区切り・1行1ステップ）"
         INT servings "何人前（任意）"
         INT cook_time "調理時間 分（任意）"
         VARCHAR image_path "画像パス（任意）"
@@ -67,6 +69,7 @@ classDiagram
         +Int id
         +String title
         +String? description
+        +String? point
         +String ingredients
         +String instructions
         +Int? servings
@@ -97,7 +100,7 @@ classDiagram
 | No. | 論理名 | 物理名 | データ型 | 桁数 | NULL | PK | FK | デフォルト | 説明 |
 |-----|--------|--------|---------|------|------|----|----|-----------|------|
 | 1 | カテゴリID | id | INT | — | NOT NULL | ○ | — | AUTO_INCREMENT | 主キー・自動採番 |
-| 2 | カテゴリ名 | name | VARCHAR | 100 | NOT NULL | — | — | — | 表示名（例: ご飯もの） |
+| 2 | カテゴリ名 | name | VARCHAR | 100 | NOT NULL | — | — | — | 表示名（例: ご飯） |
 | 3 | アイコン | icon | VARCHAR | 10 | NOT NULL | — | — | — | emoji（例: 🍚） |
 
 **制約:**
@@ -115,15 +118,16 @@ classDiagram
 | 1 | レシピID | id | INT | — | NOT NULL | ○ | — | AUTO_INCREMENT | 主キー・自動採番 |
 | 2 | レシピ名 | title | VARCHAR | 255 | NOT NULL | — | — | — | レシピのタイトル |
 | 3 | 説明文 | description | TEXT | — | NULL | — | — | NULL | 料理の説明・メモ |
-| 4 | 材料 | ingredients | TEXT | — | NOT NULL | — | — | — | 材料（改行区切り・1行1項目） |
-| 5 | 作り方 | instructions | TEXT | — | NOT NULL | — | — | — | 調理手順（改行区切り・1行1ステップ） |
-| 6 | 何人前 | servings | INT | — | NULL | — | — | NULL | 提供人数 |
-| 7 | 調理時間 | cook_time | INT | — | NULL | — | — | NULL | 分単位で記録 |
-| 8 | 画像パス | image_path | VARCHAR | 500 | NULL | — | — | NULL | `/uploads/xxx.jpg` 形式 |
-| 9 | お気に入り | is_favorite | BOOLEAN | — | NOT NULL | — | — | FALSE | お気に入りフラグ |
-| 10 | カテゴリID | category_id | INT | — | NULL | — | ○ | NULL | categories.id への外部キー |
-| 11 | 作成日時 | created_at | DATETIME | — | NOT NULL | — | — | CURRENT_TIMESTAMP | レコード作成日時 |
-| 12 | 更新日時 | updated_at | DATETIME | — | NOT NULL | — | — | CURRENT_TIMESTAMP ON UPDATE | レコード更新日時（自動更新） |
+| 4 | ポイント・コツ | point | TEXT | — | NULL | — | — | NULL | おいしく作るヒント・コツ |
+| 5 | 材料 | ingredients | TEXT | — | NOT NULL | — | — | — | 材料（改行区切り・「名前 分量」形式） |
+| 6 | 作り方 | instructions | TEXT | — | NOT NULL | — | — | — | 調理手順（改行区切り・1行1ステップ） |
+| 7 | 何人前 | servings | INT | — | NULL | — | — | NULL | 提供人数 |
+| 8 | 調理時間 | cook_time | INT | — | NULL | — | — | NULL | 分単位で記録 |
+| 9 | 画像パス | image_path | VARCHAR | 500 | NULL | — | — | NULL | `/uploads/xxx.jpg` 形式 |
+| 10 | お気に入り | is_favorite | BOOLEAN | — | NOT NULL | — | — | FALSE | お気に入りフラグ |
+| 11 | カテゴリID | category_id | INT | — | NULL | — | ○ | NULL | categories.id への外部キー |
+| 12 | 作成日時 | created_at | DATETIME | — | NOT NULL | — | — | CURRENT_TIMESTAMP | レコード作成日時 |
+| 13 | 更新日時 | updated_at | DATETIME | — | NOT NULL | — | — | CURRENT_TIMESTAMP ON UPDATE | レコード更新日時（自動更新） |
 
 **制約:**
 - PK: `id`
@@ -147,16 +151,16 @@ classDiagram
 
 | id | name | icon |
 |----|------|------|
-| 1 | ご飯もの | 🍚 |
-| 2 | パン類 | 🍞 |
-| 3 | 麺類 | 🍜 |
-| 4 | 肉類 | 🥩 |
-| 5 | 魚介類 | 🐟 |
-| 6 | 野菜 | 🥦 |
-| 7 | 汁物 | 🍲 |
-| 8 | スイーツ | 🍰 |
-| 9 | ドリンク | 🥤 |
-| 10 | その他 | 🍽️ |
+| 1 | ご飯 | 🍚 |
+| 2 | 麺類 | 🍜 |
+| 3 | 肉料理 | 🥩 |
+| 4 | 魚料理 | 🐟 |
+| 5 | 野菜料理 | 🥗 |
+| 6 | スープ | 🍲 |
+| 7 | デザート | 🍰 |
+| 8 | パン | 🍞 |
+| 9 | 飲み物 | 🍹 |
+| 10 | その他 | 🍽 |
 
 ---
 
@@ -185,6 +189,7 @@ model Recipe {
   id           Int       @id @default(autoincrement())
   title        String    @db.VarChar(255)
   description  String?   @db.Text
+  point        String?   @db.Text
   ingredients  String    @db.Text
   instructions String    @db.Text
   servings     Int?
