@@ -28,12 +28,23 @@ pnpm-debug.log*
 public/uploads/*
 !public/uploads/.gitkeep
 
-# prisma
-prisma/migrations/
+# prisma (generated client is auto-generated; migrations should be committed)
+prisma/generated/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# testing
+coverage/
+.jest-cache/
+
+# docker
+.docker/
 
 # editor
 .vscode/
