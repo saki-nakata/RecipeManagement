@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { mockCategories } from "@/app/lib/mockData";
-import * as mockData from "@/app/lib/mockData";
+import { prisma } from "@/app/lib/db";
 import fs from "fs/promises";
 import path from "path";
 
@@ -8,7 +7,10 @@ type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: Params) {
   const { id } = await params;
-  const recipe = mockData.mockRecipes.find((r) => r.id === parseInt(id, 10));
+  const recipe = await prisma.recipe.findUnique({
+    where: { id: parseInt(id, 10) },
+    include: { category: true },
+  });
   if (!recipe) {
     return NextResponse.json({ error: "レシピが見つかりません" }, { status: 404 });
   }
@@ -17,8 +19,10 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
 export async function PUT(req: NextRequest, { params }: Params) {
   const { id } = await params;
-  const idx = mockData.mockRecipes.findIndex((r) => r.id === parseInt(id, 10));
-  if (idx === -1) {
+  const recipeId = parseInt(id, 10);
+
+  const existing = await prisma.recipe.findUnique({ where: { id: recipeId } });
+  if (!existing) {
     return NextResponse.json({ error: "レシピが見つかりません" }, { status: 404 });
   }
 
@@ -51,42 +55,39 @@ export async function PUT(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "人数は正の整数で入力してください" }, { status: 400 });
   }
 
-  const cid: number = categoryId ?? 10;
-  const category = mockCategories.find((c) => c.id === cid) ?? mockCategories[9];
+  const updated = await prisma.recipe.update({
+    where: { id: recipeId },
+    data: {
+      title: title.trim(),
+      description: description?.trim() || null,
+      point: point?.trim() || null,
+      ingredients: ingredients.trim(),
+      instructions: instructions.trim(),
+      servings: servings ?? null,
+      cookTime: cookTime ?? null,
+      imagePath: imagePath ?? existing.imagePath,
+      categoryId: categoryId ?? 10,
+    },
+    include: { category: true },
+  });
 
-  const updated = {
-    ...mockData.mockRecipes[idx],
-    title: title.trim(),
-    description: description?.trim() || undefined,
-    point: point?.trim() || undefined,
-    ingredients: ingredients.trim(),
-    instructions: instructions.trim(),
-    servings: servings ?? undefined,
-    cookTime: cookTime ?? undefined,
-    imagePath: imagePath ?? mockData.mockRecipes[idx].imagePath,
-    categoryId: cid,
-    category,
-    updatedAt: new Date().toISOString(),
-  };
-
-  mockData.mockRecipes[idx] = updated;
   return NextResponse.json(updated);
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
   const { id } = await params;
-  const idx = mockData.mockRecipes.findIndex((r) => r.id === parseInt(id, 10));
-  if (idx === -1) {
+  const recipeId = parseInt(id, 10);
+
+  const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
+  if (!recipe) {
     return NextResponse.json({ error: "レシピが見つかりません" }, { status: 404 });
   }
-
-  const recipe = mockData.mockRecipes[idx];
 
   if (recipe.imagePath) {
     const filePath = path.join(process.cwd(), "public", recipe.imagePath);
     await fs.unlink(filePath).catch(() => {});
   }
 
-  mockData.mockRecipes.splice(idx, 1);
+  await prisma.recipe.delete({ where: { id: recipeId } });
   return new NextResponse(null, { status: 204 });
 }

@@ -1,20 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as mockData from "@/app/lib/mockData";
+import { prisma } from "@/app/lib/db";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function PATCH(_req: NextRequest, { params }: Params) {
   const { id } = await params;
-  const idx = mockData.mockRecipes.findIndex((r) => r.id === parseInt(id, 10));
-  if (idx === -1) {
+  const recipeId = parseInt(id, 10);
+
+  const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
+  if (!recipe) {
     return NextResponse.json({ error: "レシピが見つかりません" }, { status: 404 });
   }
 
-  mockData.mockRecipes[idx] = {
-    ...mockData.mockRecipes[idx],
-    isFavorite: !mockData.mockRecipes[idx].isFavorite,
-    updatedAt: new Date().toISOString(),
-  };
+  const updated = await prisma.recipe.update({
+    where: { id: recipeId },
+    data: { isFavorite: !recipe.isFavorite },
+    include: { category: true },
+  });
 
-  return NextResponse.json(mockData.mockRecipes[idx]);
+  return NextResponse.json(updated);
 }

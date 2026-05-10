@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique @db.VarChar(100)
+  icon    String   @db.VarChar(10)
+  recipes Recipe[]
+
+  @@map("categories")
+}
+
+model Recipe {
+  id           Int      @id @default(autoincrement())
+  title        String   @db.VarChar(255)
+  description  String?  @db.Text
+  point        String?  @db.Text
+  ingredients  String   @db.Text
+  instructions String   @db.Text
+  servings     Int?
+  cookTime     Int?     @map("cook_time")
+  imagePath    String?  @db.VarChar(500) @map("image_path")
+  isFavorite   Boolean  @default(false) @map("is_favorite")
+  categoryId   Int      @default(10) @map("category_id")
+  category     Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([categoryId])
+  @@index([isFavorite])
+  @@index([createdAt])
+  @@map("recipes")
+}
