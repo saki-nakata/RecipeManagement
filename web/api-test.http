@@ -1,0 +1,82 @@
+@baseUrl = http://localhost:3000
+
+### カテゴリ一覧取得
+GET {{baseUrl}}/api/categories
+
+###
+
+### レシピ一覧取得
+GET {{baseUrl}}/api/recipes
+
+###
+
+### レシピ一覧取得（キーワード検索）
+GET {{baseUrl}}/api/recipes?q=唐揚げ
+
+###
+
+### レシピ一覧取得（カテゴリフィルタ）
+GET {{baseUrl}}/api/recipes?categoryId=3
+
+###
+
+### レシピ一覧取得（お気に入りのみ）
+GET {{baseUrl}}/api/recipes?favorite=true
+
+###
+
+### レシピ1件取得
+GET {{baseUrl}}/api/recipes/1
+
+###
+
+### レシピ作成
+POST {{baseUrl}}/api/recipes
+Content-Type: application/json
+
+{
+  "title": "カレーライス",
+  "description": "定番の家カレー",
+  "ingredients": "カレールー 1箱\nじゃがいも 2個\n玉ねぎ 1個\n人参 1本\n鶏もも肉 200g",
+  "instructions": "野菜と肉を一口大に切る\n油で炒める\n水を加えて15分煮込む\nルーを溶かしてさらに10分煮込む",
+  "servings": 4,
+  "cookTime": 30,
+  "categoryId": 1
+}
+
+###
+
+### レシピ更新
+PUT {{baseUrl}}/api/recipes/1
+Content-Type: application/json
+
+{
+  "title": "鶏の唐揚げ（改）",
+  "description": "サクサクジューシーな唐揚げ・改良版",
+  "ingredients": "鶏もも肉 300g\n醤油 大さじ2\nみりん 大さじ1\nにんにく 1片\n生姜 1片\n片栗粉 適量",
+  "instructions": "鶏肉を一口大に切る\n醤油・みりん・にんにく・生姜で30分漬ける\n片栗粉をまぶして180℃の油で4分揚げる\n一度取り出し、200℃で1分二度揚げする",
+  "servings": 2,
+  "cookTime": 45,
+  "categoryId": 3
+}
+
+###
+
+### お気に入りトグル
+PATCH {{baseUrl}}/api/recipes/1/favorite
+
+###
+
+### レシピ削除
+DELETE {{baseUrl}}/api/recipes/1
+
+###
+
+### バリデーションエラー確認（タイトル未入力）
+POST {{baseUrl}}/api/recipes
+Content-Type: application/json
+
+{
+  "ingredients": "材料テスト",
+  "instructions": "手順テスト"
+}
