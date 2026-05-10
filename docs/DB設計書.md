@@ -1,6 +1,6 @@
 # DB設計書
 
-**バージョン:** 1.1
+**バージョン:** 1.2
 **作成日:** 2026-05-09
 **更新日:** 2026-05-10
 **関連ドキュメント:** [要件定義書.md](要件定義書.md)
@@ -37,7 +37,7 @@ erDiagram
         INT cook_time "調理時間 分（任意）"
         VARCHAR image_path "画像パス（任意）"
         BOOLEAN is_favorite "お気に入りフラグ"
-        INT category_id FK "外部キー → categories.id"
+        INT category_id FK "外部キー → categories.id（デフォルト: 10=その他）"
         DATETIME created_at "作成日時"
         DATETIME updated_at "更新日時"
     }
@@ -47,8 +47,8 @@ erDiagram
 
 **リレーション説明:**
 - 1つのカテゴリに複数のレシピが属せる（1対多）
-- レシピはカテゴリなしでも登録可能（`category_id` は NULL 許容）
-- カテゴリを削除した場合、紐づくレシピの `category_id` は NULL になる（ON DELETE SET NULL）
+- `category_id` は NOT NULL。未選択時は「その他」（id=10）をデフォルト値として使用
+- カテゴリの削除はレシピが紐づいている場合に禁止（ON DELETE RESTRICT）
 
 ---
 
@@ -76,10 +76,10 @@ classDiagram
         +Int? cookTime
         +String? imagePath
         +Boolean isFavorite
-        +Int? categoryId
+        +Int categoryId
         +DateTime createdAt
         +DateTime updatedAt
-        +Category? category
+        +Category category
     }
 
     Category "1" --> "0..*" Recipe : 1対多
@@ -125,13 +125,13 @@ classDiagram
 | 8 | 調理時間 | cook_time | INT | — | NULL | — | — | NULL | 分単位で記録 |
 | 9 | 画像パス | image_path | VARCHAR | 500 | NULL | — | — | NULL | `/uploads/xxx.jpg` 形式 |
 | 10 | お気に入り | is_favorite | BOOLEAN | — | NOT NULL | — | — | FALSE | お気に入りフラグ |
-| 11 | カテゴリID | category_id | INT | — | NULL | — | ○ | NULL | categories.id への外部キー |
+| 11 | カテゴリID | category_id | INT | — | NOT NULL | — | ○ | 10 | categories.id への外部キー（デフォルト: 10=その他） |
 | 12 | 作成日時 | created_at | DATETIME | — | NOT NULL | — | — | CURRENT_TIMESTAMP | レコード作成日時 |
 | 13 | 更新日時 | updated_at | DATETIME | — | NOT NULL | — | — | CURRENT_TIMESTAMP ON UPDATE | レコード更新日時（自動更新） |
 
 **制約:**
 - PK: `id`
-- FK: `category_id` → `categories(id)` ON DELETE SET NULL
+- FK: `category_id` → `categories(id)` ON DELETE RESTRICT
 
 **インデックス:**
 
@@ -196,8 +196,8 @@ model Recipe {
   cookTime     Int?      @map("cook_time")
   imagePath    String?   @db.VarChar(500) @map("image_path")
   isFavorite   Boolean   @default(false) @map("is_favorite")
-  categoryId   Int?      @map("category_id")
-  category     Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId   Int       @default(10) @map("category_id")
+  category     Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 
