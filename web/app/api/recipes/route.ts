@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { mockCategories } from "@/app/lib/mockData";
-import * as mockData from "@/app/lib/mockData";
+import { prisma } from "@/app/lib/db";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -8,30 +7,26 @@ export async function GET(req: NextRequest) {
   const categoryId = searchParams.get("categoryId");
   const favorite = searchParams.get("favorite");
 
-  let results = [...mockData.mockRecipes];
+  const recipes = await prisma.recipe.findMany({
+    where: {
+      ...(q
+        ? {
+            OR: [
+              { title: { contains: q } },
+              { description: { contains: q } },
+            ],
+          }
+        : {}),
+      ...(categoryId && !isNaN(parseInt(categoryId, 10))
+        ? { categoryId: parseInt(categoryId, 10) }
+        : {}),
+      ...(favorite === "true" ? { isFavorite: true } : {}),
+    },
+    include: { category: true },
+    orderBy: { createdAt: "desc" },
+  });
 
-  if (q) {
-    results = results.filter(
-      (r) =>
-        r.title.toLowerCase().includes(q) ||
-        r.description?.toLowerCase().includes(q)
-    );
-  }
-  if (categoryId) {
-    const cid = parseInt(categoryId, 10);
-    if (!isNaN(cid)) {
-      results = results.filter((r) => r.categoryId === cid);
-    }
-  }
-  if (favorite === "true") {
-    results = results.filter((r) => r.isFavorite);
-  }
-
-  results.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-
-  return NextResponse.json(results);
+  return NextResponse.json(recipes);
 }
 
 export async function POST(req: NextRequest) {
@@ -64,29 +59,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "人数は正の整数で入力してください" }, { status: 400 });
   }
 
-  const cid: number = categoryId ?? 10;
-  const category = mockCategories.find((c) => c.id === cid) ?? mockCategories[9];
-  const now = new Date().toISOString();
-
-  const newRecipe = {
-    id: mockData.idCounter.value,
-    title: title.trim(),
-    description: description?.trim() || undefined,
-    point: point?.trim() || undefined,
-    ingredients: ingredients.trim(),
-    instructions: instructions.trim(),
-    servings: servings ?? undefined,
-    cookTime: cookTime ?? undefined,
-    imagePath: imagePath ?? undefined,
-    isFavorite: false,
-    categoryId: cid,
-    category,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  mockData.mockRecipes.push(newRecipe);
-  mockData.idCounter.value++;
+  const newRecipe = await prisma.recipe.create({
+    data: {
+      title: title.trim(),
+      description: description?.trim() || null,
+      point: point?.trim() || null,
+      ingredients: ingredients.trim(),
+      instructions: instructions.trim(),
+      servings: servings ?? null,
+      cookTime: cookTime ?? null,
+      imagePath: imagePath ?? null,
+      categoryId: categoryId ?? 10,
+    },
+    include: { category: true },
+  });
 
   return NextResponse.json(newRecipe, { status: 201 });
 }
