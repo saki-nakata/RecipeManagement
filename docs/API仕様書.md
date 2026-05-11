@@ -48,7 +48,7 @@
 
 | パラメータ | 型 | 必須 | 説明 |
 |-----------|-----|------|------|
-| q | string | × | レシピ名・材料への部分一致キーワード |
+| q | string | × | レシピ名・説明文への部分一致キーワード |
 | categoryId | number | × | カテゴリ ID で絞り込み |
 | favorite | boolean | × | `true` のときお気に入りのみ |
 
@@ -212,11 +212,9 @@ GET /api/recipes/1
 DELETE /api/recipes/1
 ```
 
-### レスポンス（200 OK）
+### レスポンス（204 No Content）
 
-```json
-{ "message": "削除しました" }
-```
+レスポンスボディなし。
 
 ### エラーレスポンス
 
@@ -246,9 +244,7 @@ PATCH /api/recipes/1/favorite
 
 ### レスポンス（200 OK）
 
-```json
-{ "isFavorite": true }
-```
+更新されたレシピオブジェクト全体を返す。（`GET /api/recipes/[id]` と同形式）
 
 ---
 
