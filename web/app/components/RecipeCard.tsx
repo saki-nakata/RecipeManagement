@@ -70,12 +70,15 @@ export default function RecipeCard({ recipe, onFavoriteToggle }: Props) {
         >
           {recipe.category.icon} {recipe.category.name}
         </span>
-        {(recipe.cookTime || recipe.servings) && (
-          <p className="text-xs mt-1 space-x-2" style={{ color: '#7A6F5E' }}>
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-xs space-x-2" style={{ color: '#7A6F5E' }}>
             {recipe.cookTime && <span>⏱ {recipe.cookTime}分</span>}
             {recipe.servings && <span>👥 {recipe.servings}人前</span>}
           </p>
-        )}
+          <p className="text-xs" style={{ color: '#B0A898' }}>
+            更新日: {new Date(recipe.updatedAt).toLocaleDateString('ja-JP')}
+          </p>
+        </div>
       </div>
     </div>
   )

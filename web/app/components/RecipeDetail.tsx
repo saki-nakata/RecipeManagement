@@ -213,6 +213,9 @@ export default function RecipeDetail({ id }: Props) {
         {recipe.servings && (
           <span className="text-sm" style={{ color: '#7A6F5E' }}>👥 {recipe.servings}人前</span>
         )}
+        <span className="text-sm ml-auto" style={{ color: '#B0A898' }}>
+          更新日: {new Date(recipe.updatedAt).toLocaleDateString('ja-JP')}
+        </span>
       </div>
 
       {/* 説明 */}
