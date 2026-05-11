@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'ヒラギノ角ゴ ProN',
+    'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
+  color: #2D2417;
+  line-height: 1.6;
+}
+
+@keyframes egg-wobble {
+  0%, 100% { transform: rotate(-6deg) translateY(0px); }
+  25%       { transform: rotate(4deg)  translateY(-3px); }
+  75%       { transform: rotate(-3deg) translateY(2px); }
+}
+
+.egg-icon {
+  display: inline-block;
+  animation: egg-wobble 2.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}

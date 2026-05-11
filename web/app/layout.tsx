@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/app/components/Navbar";
 
 export const metadata: Metadata = {
   title: "レシピ管理アプリ",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body className="bg-[#FAFAF8] min-h-screen">
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
