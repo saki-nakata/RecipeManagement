@@ -35,7 +35,8 @@ export default function RecipeCard({ recipe, onFavoriteToggle }: Props) {
           <img
             src={recipe.imagePath}
             alt={recipe.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
+            style={{ backgroundColor: '#F9FAFB' }}
           />
         ) : (
           <div

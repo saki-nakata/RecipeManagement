@@ -107,8 +107,8 @@ export default function RecipeDetail({ id }: Props) {
         <img
           src={recipe.imagePath}
           alt={recipe.title}
-          className="w-full object-cover mb-6"
-          style={{ maxHeight: '380px', borderRadius: '12px' }}
+          className="w-full object-contain mb-6"
+          style={{ maxHeight: '380px', borderRadius: '12px', backgroundColor: '#F9FAFB' }}
         />
       ) : (
         <div
@@ -120,11 +120,11 @@ export default function RecipeDetail({ id }: Props) {
       )}
 
       {/* タイトル・アクション */}
-      <div className="flex items-start gap-3 mb-4 flex-wrap">
-        <h1 className="flex-1 font-bold" style={{ fontSize: '1.6rem', color: '#2D2417', lineHeight: '1.3' }}>
+      <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-4">
+        <h1 className="font-bold" style={{ fontSize: '1.6rem', color: '#2D2417', lineHeight: '1.3' }}>
           {recipe.title}
         </h1>
-        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap sm:ml-auto sm:shrink-0">
           <button
             onClick={handleFavoriteToggle}
             disabled={isFavoriteLoading}

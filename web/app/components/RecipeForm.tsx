@@ -240,7 +240,7 @@ export default function RecipeForm({ mode, recipeId }: Props) {
           <label className="block text-sm font-medium text-[#2D2417] mb-1">画像</label>
           {imagePreview ? (
             <div className="relative">
-              <img src={imagePreview} alt="プレビュー" className="w-full h-48 object-cover rounded-lg" />
+              <img src={imagePreview} alt="プレビュー" className="w-full h-48 object-contain rounded-lg" style={{ backgroundColor: '#F9FAFB' }} />
               <button
                 type="button"
                 onClick={() => { setImagePreview(undefined); setImagePath(undefined) }}
