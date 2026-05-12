@@ -154,10 +154,10 @@ export default function RecipeForm({ mode, recipeId }: Props) {
       }
       if (mode === 'create') {
         await apiClient.createRecipe(data)
-        router.push('/')
+        router.push('/?toast=created')
       } else {
         const updated = await apiClient.updateRecipe(recipeId!, data)
-        router.push(`/recipes/${updated.id}`)
+        router.push(`/recipes/${updated.id}?toast=updated`)
       }
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'エラーが発生しました')

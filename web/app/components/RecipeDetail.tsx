@@ -7,6 +7,7 @@ import type { Recipe } from '@/app/lib/types'
 import { apiClient } from '@/app/lib/apiClient'
 import { CATEGORY_COLORS } from '@/app/lib/categoryColors'
 import DeleteModal from '@/app/components/DeleteModal'
+import LoadingSpinner from '@/app/components/LoadingSpinner'
 
 interface Ingredient {
   name: string
@@ -79,7 +80,7 @@ export default function RecipeDetail({ id }: Props) {
     setIsDeleting(true)
     try {
       await apiClient.deleteRecipe(String(recipe.id))
-      router.push('/')
+      router.push('/?toast=deleted')
     } catch {
       alert('削除に失敗しました')
       setIsDeleting(false)
@@ -88,11 +89,7 @@ export default function RecipeDetail({ id }: Props) {
   }
 
   if (loading) {
-    return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#F97316' }} />
-      </div>
-    )
+    return <LoadingSpinner />
   }
 
   if (error || !recipe) {
