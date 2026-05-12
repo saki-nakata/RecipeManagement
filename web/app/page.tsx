@@ -6,6 +6,7 @@ import { apiClient } from '@/app/lib/apiClient'
 import type { Recipe, Category } from '@/app/lib/types'
 import RecipeCard from '@/app/components/RecipeCard'
 import EmptyState from '@/app/components/EmptyState'
+import LoadingSpinner from '@/app/components/LoadingSpinner'
 
 type SortOrder = 'newest' | 'oldest' | 'name' | 'cookTime'
 
@@ -123,9 +124,7 @@ export default function HomePage() {
       </div>
 
       {initialLoading ? (
-        <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#F97316' }} />
-        </div>
+        <LoadingSpinner />
       ) : sorted.length === 0 ? (
         <EmptyState hasFilters={hasFilters} />
       ) : (
