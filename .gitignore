@@ -51,3 +51,12 @@ coverage/
 .idea/
 *.swp
 *.swo
+
+# Terraform
+# ⚠️ terraform.tfstate には DB パスワード等の機密情報が平文で書かれるため必ず除外
+terraform/terraform.tfvars
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/crash.log
