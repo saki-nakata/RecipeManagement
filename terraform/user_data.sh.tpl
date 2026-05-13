@@ -135,13 +135,23 @@ http {
 }
 MAINEOF
 
+# /home/ec2-user/ に nginx ユーザーの通過権限を付与（uploads 配信に必要）
+chmod o+x /home/ec2-user
+
 # リバースプロキシ設定（port 80 → Next.js 3000）
+# /uploads/ は nginx が直接配信（Next.js 本番モードは public/ の動的ファイルを配信しないため）
 cat > /etc/nginx/conf.d/recipe.conf << 'NGINXEOF'
 server {
     listen 80 default_server;
     server_name _;
 
     client_max_body_size 10M;
+
+    location /uploads/ {
+        alias /home/ec2-user/app/web/public/uploads/;
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
 
     location / {
         proxy_pass         http://localhost:3000;
