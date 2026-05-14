@@ -14,6 +14,10 @@
 |-----------|-----------|
 | ![レシピ詳細](docs/images/screenshot-detail.png) | ![レシピ編集](docs/images/screenshot-edit.png) |
 
+## デモ動画
+
+https://github.com/saki-nakata/RecipeManagement/blob/main/docs/demo.mp4
+
 ---
 
 ## 技術スタック
