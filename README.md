@@ -16,7 +16,7 @@
 
 ## デモ動画
 
-https://github.com/saki-nakata/RecipeManagement/blob/main/docs/demo.mp4
+https://github.com/user-attachments/assets/e74a4880-57a5-470d-be64-c984f1431e20
 
 ---
 
