@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@media (min-width: 1600px) {
+  .recipe-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .container-fullhd {
+    max-width: 1600px;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'ヒラギノ角ゴ ProN',
     'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;

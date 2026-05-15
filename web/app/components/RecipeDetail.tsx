@@ -101,7 +101,7 @@ export default function RecipeDetail({ id }: Props) {
   const instructionList = parseInstructions(recipe.instructions)
 
   return (
-    <main className="max-w-[1200px] mx-auto px-5 py-7">
+    <main className="max-w-[1200px] mx-auto px-5 container-fullhd py-7">
       {/* 画像 */}
       {recipe.imagePath ? (
         <img
