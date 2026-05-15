@@ -8,7 +8,7 @@ export default function Navbar() {
       className="sticky top-0 z-40"
       style={{ backgroundColor: '#FFEDD5', borderBottom: '1px solid #FED7AA', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
     >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 container-fullhd h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity" title="レシピ一覧へ">
           <span className="egg-icon text-xl">🍳</span>
           <span

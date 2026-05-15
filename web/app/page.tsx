@@ -65,7 +65,7 @@ export default function HomePage() {
   const hasFilters = !!search || !!categoryId || favoriteOnly
 
   return (
-    <main className="max-w-6xl mx-auto px-5 py-8">
+    <main className="max-w-6xl mx-auto px-5 container-fullhd py-8">
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-extrabold" style={{ color: '#2D2417' }}>レシピ一覧</h1>
         <p className="text-sm mt-0.5" style={{ color: '#7A6F5E' }}>おいしいレシピをみつけよう</p>
@@ -128,7 +128,7 @@ export default function HomePage() {
       ) : sorted.length === 0 ? (
         <EmptyState hasFilters={hasFilters} />
       ) : (
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 transition-opacity ${fetching ? 'opacity-60' : 'opacity-100'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 recipe-grid gap-5 transition-opacity ${fetching ? 'opacity-60' : 'opacity-100'}`}>
           {sorted.map((recipe) => (
             <RecipeCard
               key={recipe.id}
